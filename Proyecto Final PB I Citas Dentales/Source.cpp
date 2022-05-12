@@ -11,7 +11,10 @@ struct Cita {
 	Cita* ant = nullptr;
 };
 
+string nom, numc, trt, desc, hora;
+float precio = 0, cantidad = 0, total = 0;
 int numact = 1, numpac = 0;
+
 Cita* pcita = nullptr;
 Cita* ucita = nullptr;
 Cita* acita = nullptr;
@@ -25,8 +28,9 @@ void guardar_citas();
 void leer_citas();
 
 int main() {
-	string nom, numc, trt, desc, hora;
-	float precio = 0, cantidad = 0, total = 0;
+	
+	leer_citas();
+
 	int op = 0;
 	string vac;
 	char Y_N = ' ';
@@ -65,6 +69,10 @@ int main() {
 			total = precio * cantidad;
 			
 			agendar_cita(nom, hora, trt, desc, precio, cantidad, total);
+
+			cout << endl << "Se ha guardado la cita con los siguientes datos:" << endl;
+			imprimir_cita(ucita);
+
 			system("pause");
 			system("cls");
 			break;
@@ -104,6 +112,8 @@ int main() {
 
 			if (Y_N == 'Y' || Y_N == 'y') {
 
+				system("cls");
+
 				guardar_citas();
 
 				cout << "Gracias por utilizar este programa :)" << endl;
@@ -142,9 +152,7 @@ void agendar_cita(string nom, string hora, string trt, string desc, float precio
 	ncita->cantidad = cantidad;
 	ncita->numc = to_string(numact);
 
-	cout << endl << "Se ha guardado la cita con los siguientes datos:" << endl;
-	imprimir_cita(ncita);
-	
+		
 	if (numact == 1) {
 		pcita = ncita;
 		ucita = ncita;
@@ -266,3 +274,44 @@ void guardar_citas() {
 	}
 }
 
+void leer_citas() {
+	ifstream leer_citas_guardadas;
+
+	leer_citas_guardadas.open("Citas_Dentales");
+
+	if (leer_citas_guardadas) {
+		numpac = 1;
+		string leer;
+
+		while (getline(leer_citas_guardadas, leer)) {
+			if (numpac == 1) {
+				nom = leer;
+				numpac++;
+			}
+			else if (numpac == 2) {
+				hora = leer;
+				numpac++;
+			}
+			else if (numpac == 3) {
+				trt = leer;
+				numpac++;
+			}
+			else if (numpac == 4) {
+				desc = leer;
+				numpac++;
+			}
+			else if (numpac == 5) {
+				precio = stof(leer);
+				numpac++;
+			}
+			else if (numpac == 6) {
+				cantidad = stof(leer);
+				numpac++;
+			}
+			else {
+				agendar_cita(nom, hora, trt, desc, precio, cantidad, stof(leer));
+				numpac = 1;
+			}
+		}
+	}
+}
