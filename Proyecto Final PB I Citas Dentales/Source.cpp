@@ -11,7 +11,7 @@ struct Cita {
 	Cita* ant = nullptr;
 };
 
-string nom, trt, desc, hora;
+string nom, trt, desc, hora, vac;
 float precio = 0, cantidad = 0, total = 0;
 int numact = 1, numpac = 0;
 
@@ -21,7 +21,7 @@ Cita* acita = nullptr;
 
 void imprimir_cita(Cita*);
 void agendar_cita(string, string, string, string, float, float, float);
-Cita modificar_cita(Cita, int);
+void modificar_cita(int);
 void eliminar_cita(int);
 void citas_vigentes();
 void guardar_citas();
@@ -32,7 +32,6 @@ int main() {
 	leer_citas();
 
 	int op = 0;
-	string vac;
 	char Y_N = ' ';
 
 	while (true) {		
@@ -79,7 +78,21 @@ int main() {
 
 		case 2:
 
-			cout << 2;
+			citas_vigentes();
+
+			if (pcita) {
+				cout << "Ingrese el numero de la cita que desea modificar o cualquier letra para regresar al menu principal: ";
+				cin >> numpac;
+
+				cin.clear();
+				getline(cin, vac);
+				
+				system("cls");
+
+				modificar_cita(numpac);
+
+			}
+
 			system("pause");
 
 			system("cls");
@@ -91,9 +104,14 @@ int main() {
 			citas_vigentes();
 			
 			if (pcita) {
-			cout << "Ingrese el numero de la cita que desea eliminar: ";
+			cout << "Ingrese el numero de la cita que desea eliminar o cualquier letra para regresar al menu principal: ";
 			cin >> numpac;
+
+			cin.clear();
+			getline(cin, vac);
+
 			eliminar_cita(numpac);
+			
 			}
 
 			system("pause");
@@ -143,7 +161,9 @@ int main() {
 }
 
 void imprimir_cita(Cita* imp) {
+	
 	cout << "Cita #" << imp->numc << "\nNombre : " << imp->nom << endl << "Hora : " << imp->hora << endl << "Tratamiento : " << imp->trt << endl << "Descripcion : " << imp->desc << endl << "Precio : " << imp->precio << endl << "Cantidad : " << imp->cantidad << endl << "Total : " << imp->total << endl << endl;
+
 }
 
 void agendar_cita(string nom, string hora, string trt, string desc, float precio, float cantidad, float total) {
@@ -174,61 +194,85 @@ void agendar_cita(string nom, string hora, string trt, string desc, float precio
 
 }
 
-Cita modificar_cita(Cita act, int numpac) {
+void modificar_cita(int numc) {
+	
 	int op = 0;
-	cout << "Ha elegido la cita con los siguientes datos:\nNombre: " << act.nom << endl << "Hora: " << act.hora << endl << "Tratamiento: " << act.trt << endl << "Descripcion: " << act.desc << endl << "Precio: " << act.precio << endl << "Cantidad: " << act.cantidad << endl << "Total: " << act.total << endl;
-	cout << "Escoja una opcion que quiera modificar:\n1 Nombre\n2 Hora\n3 Tratamiento\n4 Descripcion\n5 Tratamiento y Descripcion\n6 Precio\n7 Cantidad\n8 No modificar" << endl;
-	cin >> op;
-	switch (op) {
-	case 1:
-		cout << "Ingrese el nombre completo del paciente" << endl;
-		cin.ignore();
-		getline(cin, act.nom);
-		break;
-	case 2:
-		cout << "Ingrese la nueva hora de la cita en formato de 24 horas" << endl;
-		cin.ignore();
-		cin >> act.hora;
-		break;
-	case 3:
-		cout << "Ingrese el nuevo tratamiento se realizara:" << endl;
-		cin.ignore();
-		getline(cin, act.trt);
-		break;
-	case 4:
-		cout << "Describa lo que se realizara en el tratamiento:" << endl;
-		cin.ignore();
-		getline(cin, act.desc);
-		break;
-	case 5:
-		cout << "Ingrese el nuevo tratamiento se realizara:" << endl;
-		cin.ignore();
-		getline(cin, act.trt);
-		cout << "Describa lo que se realizara en el tratamiento:" << endl;
-		getline(cin, act.desc);
-		break;
-	case 6:
-		cout << "Cuanto sera el precio unitario?" << endl;
-		cin >> act.precio;
-		act.total = act.precio * act.cantidad;
-		break;
-	case 7:
-		cout << "Cuanto sera la cantidad del tratamiento?" << endl;
-		cin >> act.cantidad;
-		act.total = act.precio * act.cantidad;
-		break;
-	case 8:
-		break;
-	default:
-		cout << op << " no es una opcion valida" << endl << endl;
-	};
-	if (op == 1 || op == 2 || op == 3 || op == 4 || op == 5 || op == 6 || op == 7) {
-		cout << endl << "Los nuevos datos de la cita " << numpac << " son:\nNombre: " << act.nom << endl << "Hora : " << act.hora << endl << "Tratamiento : " << act.trt << endl << "Descripcion : " << act.desc << endl << "Precio : " << act.precio << endl << "Cantidad : " << act.cantidad << endl << "Total : " << act.total << endl << endl;
+	acita = pcita;
+
+	while (acita) {
+		if (stoi(acita->numc) == numc) {
+			cout << "Eligio la cita con los siguientes datos: " << endl;
+			imprimir_cita(acita);
+			cout << "Escriba el numero de lo que quiera modificar:\n1 Nombre\n2 Hora\n3 Tratamiento\n4 Descripcion\n5 Tratamiento y Descripcion\n6 Precio\n7 Cantidad\n8 No modificar" << endl;
+			cin >> op;
+
+			cin.clear();
+			getline(cin, vac);
+			
+			system("cls");
+
+			switch (op) {
+			case 1:
+				cout << "Ingrese el nombre completo del paciente" << endl;
+				getline(cin, acita->nom);
+				break;
+
+			case 2:
+				cout << "Ingrese la nueva hora de la cita en formato de 24 horas" << endl;
+				cin >> acita->hora;
+				break;
+
+			case 3:
+				cout << "Ingrese el nuevo tratamiento se realizara:" << endl;
+				getline(cin, acita->trt);
+				break;
+
+			case 4:
+				cout << "Describa lo que se realizara en el tratamiento:" << endl;
+				getline(cin, acita->desc);
+				break;
+
+			case 5:
+				cout << "Ingrese el nuevo tratamiento se realizara:" << endl;
+				getline(cin, acita->trt);
+				cout << "Describa lo que se realizara en el tratamiento:" << endl;
+				getline(cin, acita->desc);
+				break;
+
+			case 6:
+				cout << "Cuanto sera el precio unitario?" << endl;
+				cin >> acita->precio;
+				acita->total = acita->precio * acita->cantidad;
+				break;
+
+			case 7:
+				cout << "Cuanto sera la cantidad del tratamiento?" << endl;
+				cin >> acita->cantidad;
+				acita->total = acita->precio * acita->cantidad;
+				break;
+
+			case 8:
+				break;
+			default:
+				cout << "No ingreso una opcion valida" << endl;
+			};
+
+			system("cls");
+
+			if (op == 1 || op == 2 || op == 3 || op == 4 || op == 5 || op == 6 || op == 7) {
+				cout << "Los nuevos datos de la cita son:" << endl;
+				imprimir_cita(acita);
+			}
+			else if (op == 8) {
+				cout << "Los datos no se modificaron" << endl;
+			}
+			break;
+		}
+		else {
+			acita = acita->sig;
+		}
+
 	}
-	else if (op == 8) {
-		cout << "Los datos no se modificaron" << endl;
-	}
-	return act;
 }
 
 void eliminar_cita(int numc) {
@@ -247,7 +291,7 @@ void eliminar_cita(int numc) {
 			delete acita;
 			acita = nullptr;
 		}
-		else if (stoi(ucita->numc) == stoi(acita->numc)) {
+		else if (stoi(ucita->numc) == numc) {
 			ucita = acita->ant;
 			acita->ant->sig = nullptr;
 			delete acita;
@@ -264,6 +308,7 @@ void eliminar_cita(int numc) {
 		}
 
 	}
+
 }
 
 void citas_vigentes() {
@@ -278,6 +323,7 @@ void citas_vigentes() {
 			acita = acita->sig;
 		}
 	}
+
 }
 
 void guardar_citas() {
@@ -304,6 +350,7 @@ void guardar_citas() {
 }
 
 void leer_citas() {
+
 	ifstream leer_citas_guardadas;
 
 	leer_citas_guardadas.open("Citas_Dentales");
@@ -343,4 +390,5 @@ void leer_citas() {
 			}
 		}
 	}
+
 }
