@@ -1,65 +1,107 @@
 #include <iostream>;
-#include <string>
+#include <string>;
+#include <fstream>;
+
 using namespace std;
 
 struct Cita {
-	string nom = "", trt = "", desc = "", hora = "";
+	string nom, numc, trt, desc, hora;
 	float precio = 0, cantidad = 0, total = 0;
+	Cita* sig = nullptr;
+	Cita* ant = nullptr;
 };
 
-Cita agendar_cita(int);
+int numact = 1, numpac = 0;
+Cita* pcita = nullptr;
+Cita* ucita = nullptr;
+Cita* acita = nullptr;
+
+void imprimir_cita(Cita*);
+void agendar_cita(string, string, string, float, float, float);
 Cita modificar_cita(Cita, int);
 Cita eliminar_cita(Cita, int);
-void citas_vigentes(Cita[], int);
+void citas_vigentes();
 
 int main() {
-	int op = 0, numpac = 0, numpacact = 0;
-	Cita citas[100];
+	string nom, numc, trt, desc, hora;
+	float precio = 0, cantidad = 0, total = 0;
+	int op = 0;
+	string vac;
+	char Y_N = ' ';
 
-	while (op != 6) {
-		cout << "Escoja una de las siguientes opciones:\n1 Agendar cita\n2 Modificar cita\n3 Eliminar cita\n4 Lista de citas vigentes\n5 Limpiar pantalla\n6 Salir" << endl;
+	ifstream citas_guardadas;
+
+	citas_guardadas.open("Citas_Dentales");
+
+
+	while (true) {		
+		cout << "Escoja una de las siguientes opciones:\n1 Agendar cita\n2 Modificar cita\n3 Eliminar cita\n4 Lista de citas vigentes\n5 Salir" << endl;
 		cin >> op;
+		system("cls");
+
+		//En caso de que se ingrese algo que no fuese un numero se limpia antes de verificar la opcion
+		cin.clear(); 
+		getline(cin, vac);
 
 		switch (op) {
 		case 1:
-			numpacact++;
-			citas[numpacact] = agendar_cita(numpacact);
-			system("pause");
-			break;
+			cout << "Ingrese el nombre completo del paciente: ";
+			cin.ignore();
+			getline(cin, nom);
 
-		case 2:
-			cout << "Ingrese el numero de cita del paciente" << endl;
-			cin >> numpac;
-			citas[numpac] = modificar_cita(citas[numpac], numpac);
-			system("pause");
-			break;
+			cout << "Ingrese la hora de la cita en formato de 24 horas: ";
+			cin >> hora;
 
-		case 3:
-			cout << "Ingrese el numero de cita que desea eliminar" << endl;
-			cin >> numpac;
-			citas[numpac] = eliminar_cita(citas[numpac], numpac);
-			system("pause");
-			break;
+			cout << "Ingrese que tratamiento se realizara: ";
+			cin.ignore();
+			getline(cin, trt);
 
-		case 4:
-			citas_vigentes(citas, numpacact);
-			system("pause");
-			break;
+			cout << "Describa el tratamiento: ";
+			getline(cin, desc);
 
-		case 5:
-			cout << "Se limpiara la pantalla" << endl;
+			cout << "Cuanto sera el precio unitario? ";
+			cin >> precio;
+
+			cout << "Cuanto sera la cantidad del tratamiento? ";
+			cin >> cantidad;
+			total = precio * cantidad;
+			
+			agendar_cita(nom, hora, trt, desc, precio, cantidad, total);
 			system("pause");
 			system("cls");
 			break;
 
-		case 6:
-			cout << "Gracias por utilizar este programa :)" << endl;
+		case 2:
+			cout << 2;
 			system("pause");
-			exit(0);
+			system("cls");
+			break;
+
+		case 3:
+			cout << 3;
+			system("pause");
+			system("cls");
+			break;
+
+		case 4:
+			cout << 4;
+			system("pause");
+			system("cls");
+			break;
+
+		case 5:
+			cout << "Teclee 'Y' o 'y' para salir" << endl;
+			cin >> Y_N;
+			if (Y_N == 'Y' || Y_N == 'y') {
+				cout << "Gracias por utilizar este programa :)" << endl;
+
+				exit(0);
+			}
+			system("cls");
 			break;
 
 		default:
-			cout << "La opcion " << op << " no es una opcion valida" << endl;
+			cout << "No ingreso una opcion valida" << endl;
 			break;
 		};
 	}
@@ -67,25 +109,38 @@ int main() {
 
 }
 
-Cita agendar_cita(int numpacact) {
-	Cita c;
-	cout << "Ingrese el nombre completo del paciente: ";
-	cin.ignore();
-	getline(cin, c.nom);
-	cout << "Ingrese la hora de la cita en formato de 24 horas: ";
-	cin >> c.hora;
-	cout << "Ingrese que tratamiento se realizara: ";
-	cin.ignore();
-	getline(cin, c.trt);
-	cout << "Describa el tratamiento: ";
-	getline(cin, c.desc);
-	cout << "Cuanto sera el precio unitario? ";
-	cin >> c.precio;
-	cout << "Cuanto sera la cantidad del tratamiento? ";
-	cin >> c.cantidad;
-	c.total = c.precio * c.cantidad;
-	cout << endl << "Se ha guardado la cita con los siguientes datos:" << endl << "Numero de cita: " << numpacact << endl << "Nombre: " << c.nom << endl << "Hora: " << c.hora << endl << "Tratamiento: " << c.trt << endl << "Descripcion: " << c.desc << endl << "Precio: " << c.precio << endl << "Cantidad: " << c.cantidad << endl << "Total: " << c.total << endl << endl;
-	return c;
+void imprimir_cita(Cita* imp) {
+	cout << "Cita #" << imp->numc << "\nNombre : " << imp->nom << endl << "Hora : " << imp->hora << endl << "Tratamiento : " << imp->trt << endl << "Descripcion : " << imp->desc << endl << "Precio : " << imp->precio << endl << "Cantidad : " << imp->cantidad << endl << "Total : " << imp->total << endl;
+}
+
+void agendar_cita(string nom, string hora, string trt, string desc, float precio, float cantidad, float total) {
+	
+	Cita* ncita = new Cita;
+
+	ncita->nom = nom;
+	ncita->trt = trt;
+	ncita->hora = hora;
+	ncita->desc = desc;
+	ncita->total = total;
+	ncita->precio = precio;
+	ncita->cantidad = cantidad;
+	ncita->numc = to_string(numact);
+
+	cout << endl << "Se ha guardado la cita con los siguientes datos:" << endl;
+	imprimir_cita(ncita);
+	
+	if (numact == 1) {
+		pcita = ncita;
+		ucita = ncita;
+	}
+	else {
+		ncita->ant = ucita;
+		ucita->sig = ncita;
+		ucita = ncita;
+	}
+
+	numact++;
+
 }
 
 Cita modificar_cita(Cita act, int numpac) {
@@ -158,22 +213,16 @@ Cita eliminar_cita(Cita act, int numpac) {
 	return act;
 }
 
-void citas_vigentes(Cita citas[], int numpacact) {
-	int numpac = 0, v = 0, comp = 0;
-
-	while (numpac < numpacact) {
-		numpac++;
-		if (citas[numpac].nom != " ") {
-			if (comp == 0) {
-				cout << "Las citas vigentes son:" << endl << endl;
-				comp++;
-				v++;
-			}
-			cout << "Numero de cita: " << numpac << endl << "Nombre: " << citas[numpac].nom << endl << "Hora : " << citas[numpac].hora << endl << "Tratamiento : " << citas[numpac].trt << endl << "Descripcion : " << citas[numpac].desc << endl << "Precio : " << citas[numpac].precio << endl << "Cantidad : " << citas[numpac].cantidad << endl << "Total : " << citas[numpac].total << endl << endl;
-		};
-
+void citas_vigentes() {
+	
+	if (!pcita) {
+		cout << "No hay citas vigentes";
 	}
-	if (v == 0) {
-		cout << "No hay citas vigentes" << endl;
+	else {
+		acita = pcita;
+		while (acita) {
+			imprimir_cita(acita);
+			acita = acita->sig;
+		}
 	}
 }
