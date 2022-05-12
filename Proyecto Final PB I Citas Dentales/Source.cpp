@@ -11,7 +11,7 @@ struct Cita {
 	Cita* ant = nullptr;
 };
 
-string nom, numc, trt, desc, hora;
+string nom, trt, desc, hora;
 float precio = 0, cantidad = 0, total = 0;
 int numact = 1, numpac = 0;
 
@@ -22,7 +22,7 @@ Cita* acita = nullptr;
 void imprimir_cita(Cita*);
 void agendar_cita(string, string, string, string, float, float, float);
 Cita modificar_cita(Cita, int);
-Cita eliminar_cita(Cita, int);
+void eliminar_cita(int);
 void citas_vigentes();
 void guardar_citas();
 void leer_citas();
@@ -88,7 +88,14 @@ int main() {
 
 		case 3:
 
-			cout << 3;
+			citas_vigentes();
+			
+			if (pcita) {
+			cout << "Ingrese el numero de la cita que desea eliminar: ";
+			cin >> numpac;
+			eliminar_cita(numpac);
+			}
+
 			system("pause");
 
 			system("cls");
@@ -224,23 +231,45 @@ Cita modificar_cita(Cita act, int numpac) {
 	return act;
 }
 
-Cita eliminar_cita(Cita act, int numpac) {
-	cout << "Ha elegido eleminar la cita " << numpac << " con los siguientes datos : \nNombre : " << act.nom << endl << "Hora : " << act.hora << endl << "Tratamiento : " << act.trt << endl << "Descripcion : " << act.desc << endl << "Precio : " << act.precio << endl << "Cantidad : " << act.cantidad << endl << "Total : " << act.total << endl;
-	act.nom = " ";
-	act.hora = "";
-	act.trt = "";
-	act.desc = "";
-	act.precio = 0;
-	act.cantidad = 0;
-	act.total = 0;
-	cout << "La cita " << numpac << " ha sido eliminada" << endl << endl;
-	return act;
+void eliminar_cita(int numc) {
+	
+	acita = pcita;
+
+	while (acita) {
+		if (stoi(pcita->numc) == numc) {
+			if (pcita->sig != nullptr) {
+				pcita = acita->sig;
+				acita->sig->ant = nullptr;
+			}
+			else {
+				pcita = nullptr;
+			}
+			delete acita;
+			acita = nullptr;
+		}
+		else if (stoi(ucita->numc) == stoi(acita->numc)) {
+			ucita = acita->ant;
+			acita->ant->sig = nullptr;
+			delete acita;
+			acita = nullptr;
+		}
+		else if (stoi(acita->numc) == numc) {
+			acita->sig->ant = acita->ant;
+			acita->ant->sig = acita->sig;
+			delete acita;
+			acita = nullptr;
+		}			
+		else {
+			acita = acita->sig;
+		}
+
+	}
 }
 
 void citas_vigentes() {
 	
 	if (!pcita) {
-		cout << "No hay citas vigentes";
+		cout << "No hay citas vigentes" << endl;
 	}
 	else {
 		acita = pcita;
