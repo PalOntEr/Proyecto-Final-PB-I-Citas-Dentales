@@ -50,10 +50,10 @@ int main() {
 			cout << "Ingrese el nombre completo del paciente: ";
 			getline(cin, nom);
 
-			cout << "Ingrese la hora de la cita en formato de 24 horas: ";
+			cout << "Ingrese la hora de la cita en formato de 24 horas (Por ejemplo 13:00): ";
 			cin >> hora;
 
-			cout << "Ingrese que tratamiento se realizara: ";
+			cout << "Ingrese como se llama tratamiento se realizara: ";
 			cin.ignore();
 			getline(cin, trt);
 
@@ -63,13 +63,15 @@ int main() {
 			cout << "Cuanto sera el precio unitario? ";
 			cin >> precio;
 
-			cout << "Cuanto sera la cantidad del tratamiento? ";
+			cout << "Cual sera la cantidad del tratamiento? ";
 			cin >> cantidad;
 			total = precio * cantidad;
 			
+			system("cls");
+			
 			agendar_cita(nom, hora, trt, desc, precio, cantidad, total);
 
-			cout << endl << "Se ha guardado la cita con los siguientes datos:" << endl;
+			cout << "Se ha guardado la cita con los siguientes datos:" << endl;
 			imprimir_cita(ucita);
 
 			system("pause");
@@ -104,13 +106,13 @@ int main() {
 			citas_vigentes();
 			
 			if (pcita) {
-			cout << "Ingrese el numero de la cita que desea eliminar o cualquier letra para regresar al menu principal: ";
-			cin >> numpac;
+				cout << "Ingrese el numero de la cita que desea eliminar o cualquier letra para regresar al menu principal: ";
+				cin >> numpac;
 
-			cin.clear();
-			getline(cin, vac);
+				cin.clear();
+				getline(cin, vac);
 
-			eliminar_cita(numpac);
+				eliminar_cita(numpac);
 			
 			}
 
