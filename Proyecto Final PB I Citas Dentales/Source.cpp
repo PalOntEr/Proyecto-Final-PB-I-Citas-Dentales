@@ -17,10 +17,12 @@ Cita* ucita = nullptr;
 Cita* acita = nullptr;
 
 void imprimir_cita(Cita*);
-void agendar_cita(string, string, string, float, float, float);
+void agendar_cita(string, string, string, string, float, float, float);
 Cita modificar_cita(Cita, int);
 Cita eliminar_cita(Cita, int);
 void citas_vigentes();
+void guardar_citas();
+void leer_citas();
 
 int main() {
 	string nom, numc, trt, desc, hora;
@@ -28,11 +30,6 @@ int main() {
 	int op = 0;
 	string vac;
 	char Y_N = ' ';
-
-	ifstream citas_guardadas;
-
-	citas_guardadas.open("Citas_Dentales");
-
 
 	while (true) {		
 		cout << "Escoja una de las siguientes opciones:\n1 Agendar cita\n2 Modificar cita\n3 Eliminar cita\n4 Lista de citas vigentes\n5 Salir" << endl;
@@ -44,9 +41,10 @@ int main() {
 		getline(cin, vac);
 
 		switch (op) {
+
 		case 1:
+
 			cout << "Ingrese el nombre completo del paciente: ";
-			cin.ignore();
 			getline(cin, nom);
 
 			cout << "Ingrese la hora de la cita en formato de 24 horas: ";
@@ -72,32 +70,50 @@ int main() {
 			break;
 
 		case 2:
+
 			cout << 2;
 			system("pause");
+
 			system("cls");
+
 			break;
 
 		case 3:
+
 			cout << 3;
 			system("pause");
+
 			system("cls");
+
 			break;
 
 		case 4:
-			cout << 4;
+
+			citas_vigentes();
+
 			system("pause");
+
 			system("cls");
+
 			break;
 
 		case 5:
+
 			cout << "Teclee 'Y' o 'y' para salir" << endl;
 			cin >> Y_N;
+
 			if (Y_N == 'Y' || Y_N == 'y') {
+
+				guardar_citas();
+
 				cout << "Gracias por utilizar este programa :)" << endl;
 
 				exit(0);
+
 			}
+
 			system("cls");
+
 			break;
 
 		default:
@@ -110,7 +126,7 @@ int main() {
 }
 
 void imprimir_cita(Cita* imp) {
-	cout << "Cita #" << imp->numc << "\nNombre : " << imp->nom << endl << "Hora : " << imp->hora << endl << "Tratamiento : " << imp->trt << endl << "Descripcion : " << imp->desc << endl << "Precio : " << imp->precio << endl << "Cantidad : " << imp->cantidad << endl << "Total : " << imp->total << endl;
+	cout << "Cita #" << imp->numc << "\nNombre : " << imp->nom << endl << "Hora : " << imp->hora << endl << "Tratamiento : " << imp->trt << endl << "Descripcion : " << imp->desc << endl << "Precio : " << imp->precio << endl << "Cantidad : " << imp->cantidad << endl << "Total : " << imp->total << endl << endl;
 }
 
 void agendar_cita(string nom, string hora, string trt, string desc, float precio, float cantidad, float total) {
@@ -226,3 +242,27 @@ void citas_vigentes() {
 		}
 	}
 }
+
+void guardar_citas() {
+	
+	ofstream citas_guardadas;
+	citas_guardadas.open("Citas_Dentales");
+
+	if (citas_guardadas) {
+		acita = pcita;
+		while (acita) {
+			citas_guardadas << acita->nom << endl;
+			citas_guardadas << acita->hora << endl;
+			citas_guardadas << acita->trt << endl;
+			citas_guardadas << acita->desc << endl;
+			citas_guardadas << acita->precio << endl;
+			citas_guardadas << acita->cantidad << endl;
+			citas_guardadas << acita->total << endl;
+
+			acita = acita->sig;
+		}
+
+		citas_guardadas.close();
+	}
+}
+
