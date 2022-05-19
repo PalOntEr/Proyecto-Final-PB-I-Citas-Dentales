@@ -60,10 +60,10 @@ int main() {
 			cout << "Describa el tratamiento: ";
 			getline(cin, desc);
 
-			cout << "Cuanto sera el precio unitario? ";
+			cout << "Cuanto sera el precio unitario? (Por ejemplo 300)";
 			cin >> precio;
 
-			cout << "Cual sera la cantidad del tratamiento? ";
+			cout << "Cual sera la cantidad del tratamiento? (Por ejemplo 2)";
 			cin >> cantidad;
 			total = precio * cantidad;
 			
@@ -220,12 +220,12 @@ void modificar_cita(int numc) {
 				break;
 
 			case 2:
-				cout << "Ingrese la nueva hora de la cita en formato de 24 horas" << endl;
+				cout << "Ingrese la nueva hora de la cita en formato de 24 horas (Por ejemplo 13:00)" << endl;
 				cin >> acita->hora;
 				break;
 
 			case 3:
-				cout << "Ingrese el nuevo tratamiento se realizara:" << endl;
+				cout << "Ingrese el nombre del nuevo tratamiento se realizara:" << endl;
 				getline(cin, acita->trt);
 				break;
 
@@ -235,20 +235,20 @@ void modificar_cita(int numc) {
 				break;
 
 			case 5:
-				cout << "Ingrese el nuevo tratamiento se realizara:" << endl;
+				cout << "Ingrese el nombre del nuevo tratamiento se realizara:" << endl;
 				getline(cin, acita->trt);
 				cout << "Describa lo que se realizara en el tratamiento:" << endl;
 				getline(cin, acita->desc);
 				break;
 
 			case 6:
-				cout << "Cuanto sera el precio unitario?" << endl;
+				cout << "Cuanto sera el precio unitario? (Por ejemplo 300)" << endl;
 				cin >> acita->precio;
 				acita->total = acita->precio * acita->cantidad;
 				break;
 
 			case 7:
-				cout << "Cuanto sera la cantidad del tratamiento?" << endl;
+				cout << "Cuanto sera la cantidad del tratamiento? (Por ejemplo 2)" << endl;
 				cin >> acita->cantidad;
 				acita->total = acita->precio * acita->cantidad;
 				break;
